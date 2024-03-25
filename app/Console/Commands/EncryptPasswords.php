@@ -17,21 +17,17 @@ class EncryptPasswords extends Command
     }
 
     public function handle()
-    {
-        // Obtener todos los usuarios de la base de datos
-        $users = User::all();
+{
+    // Obtener todos los usuarios de la base de datos
+    $users = User::all();
 
-        foreach ($users as $user) {
-            // Encriptar la contraseña si no está encriptada
-            if (!Hash::needsRehash($user->password)) {
-                $user->password = Hash::make($user->password);
-                $user->save();
-                $this->info('Password for user ' . $user->email . ' encrypted successfully.');
-            } else {
-                $this->info('Password for user ' . $user->email . ' is already hashed.');
-            }
-        }
-
-        $this->info('All passwords encrypted successfully.');
+    foreach ($users as $user) {
+        // Encriptar la contraseña
+        $user->password = Hash::make($user->password);
+        $user->save();
+        $this->info('Password for user ' . $user->email . ' encrypted successfully.');
     }
+
+    $this->info('All passwords encrypted successfully.');
+}
 }

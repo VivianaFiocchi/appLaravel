@@ -7,7 +7,7 @@ use App\Http\Controllers\SuperadminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\PasswordSetupController;
-
+use App\Http\Controllers\TaskController;
 Route::get('/', function () {
     return view('login');
 });
@@ -27,13 +27,15 @@ Route::post('auth/forgot-password', [ForgotPasswordController::class, 'sendReset
 Route::get('/password/reset', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('/password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 
-Route::get('/password/setup', [PasswordSetupController::class, 'showPasswordSetupForm'])->name('password.setup');
-Route::post('/password/setup', [PasswordSetupController::class, 'updatePassword'])->name('password.update');
+Route::get('/auth/password-setup', [PasswordSetupController::class, 'showPasswordSetupForm'])->name('password.setup');
+Route::post('/auth/password-setup', [PasswordSetupController::class, 'updatePassword'])->name('password.update');
+
 
 //super Admin
 Route::get('/superadmin/dashboard', [SuperadminController::class, 'dashboard'])->name('superadmin.dashboard');
 Route::get('/superadmin/registro', [SuperadminController::class, 'showRegistrationForm'])->name('superadmin.registro');
 Route::post('/superadmin/registro', [SuperadminController::class, 'registerNewUser'])->name('superadmin.registro.submit');
+Route::get('/superadmin/create', [TaskController::class, 'create'])->name('superadmin.create');
 
 
 //User

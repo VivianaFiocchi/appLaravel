@@ -7,12 +7,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\WelcomeEmail;
+use App\Models\Task;
 
 class SuperadminController extends Controller
 {
     public function dashboard()
     {
-        return view('superadmin.dashboard');
+        // Obtener todas las tareas para mostrar en el dashboard
+        $tasks = Task::all();
+        return view('superadmin.dashboard', compact('tasks'));
     }
 
     public function showRegistrationForm()
@@ -40,6 +43,6 @@ class SuperadminController extends Controller
         Mail::to($user->email)->send(new WelcomeEmail($user));
 
         // Redirigir a alguna página o mostrar un mensaje de éxito
-        return redirect()->route('login')->with('success', 'Usuario registrado exitosamente. Por favor, inicie sesión para comenzar.');
+        return redirect()->route('superadmin.dashboard')->with('success', 'Usuario registrado exitosamente. Por favor, inicie sesión para comenzar.');
     }
 }
