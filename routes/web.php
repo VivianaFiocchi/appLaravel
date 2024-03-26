@@ -27,6 +27,8 @@ Route::post('auth/forgot-password', [ForgotPasswordController::class, 'sendReset
 Route::get('/password/reset', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('/password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 
+//Rutas Configurar contraseña primer ingreso
+
 Route::get('/auth/password-setup', [PasswordSetupController::class, 'showPasswordSetupForm'])->name('password.setup');
 Route::post('/auth/password-setup', [PasswordSetupController::class, 'updatePassword'])->name('password.update');
 
@@ -35,7 +37,14 @@ Route::post('/auth/password-setup', [PasswordSetupController::class, 'updatePass
 Route::get('/superadmin/dashboard', [SuperadminController::class, 'dashboard'])->name('superadmin.dashboard');
 Route::get('/superadmin/registro', [SuperadminController::class, 'showRegistrationForm'])->name('superadmin.registro');
 Route::post('/superadmin/registro', [SuperadminController::class, 'registerNewUser'])->name('superadmin.registro.submit');
-Route::get('/superadmin/create', [TaskController::class, 'create'])->name('superadmin.create');
+Route::get('/superadmin/create', [SuperadminController::class, 'create'])->name('superadmin.create');
+Route::post('/superadmin/store', [SuperadminController::class, 'store'])->name('superadmin.store');
+
+
+//Rutas de Tareas
+Route::post('/superadmin/tasks', [SuperadminController::class, 'store'])->name('superadmin.store');
+Route::delete('/superadmin/tasks/{id}', [SuperadminController::class, 'destroy'])->name('superadmin.delete');
+Route::get('/superadmin/tasks/{id}/edit', [SuperadminController::class, 'edit'])->name('superadmin.edit');
 
 
 //User
