@@ -103,7 +103,33 @@ class SuperadminController extends Controller
         // Buscar la tarea por su ID
         $task = Task::findOrFail($id);
 
+        $users = User::all();
+
         // Retornar la vista de edición con la tarea
-        return view('superadmin.editTask', compact('task'));
+        return view('superadmin.edit', compact('task','users'));
+    }
+
+    // Función para actualizar una tarea
+    public function update(Request $request, $id)
+    {
+        // Validar los datos del formulario
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'assigned_user_id' => 'required|exists:users,id',
+        ]);
+
+        // Buscar la tarea por su ID
+        $task = Task::findOrFail($id);
+
+        // Actualizar los datos de la tarea
+        $task->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'assigned_user_id' => $request->assigned_user_id,
+        ]);
+
+        // Redirigir a alguna página o mostrar un mensaje de éxito
+        return redirect()->route('superadmin.dashboard')->with('success', 'Tarea actualizada exitosamente.');
     }
 }

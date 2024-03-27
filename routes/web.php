@@ -37,15 +37,15 @@ Route::post('/auth/password-setup', [PasswordSetupController::class, 'updatePass
 Route::get('/superadmin/dashboard', [SuperadminController::class, 'dashboard'])->name('superadmin.dashboard');
 Route::get('/superadmin/registro', [SuperadminController::class, 'showRegistrationForm'])->name('superadmin.registro');
 Route::post('/superadmin/registro', [SuperadminController::class, 'registerNewUser'])->name('superadmin.registro.submit');
-Route::get('/superadmin/create', [SuperadminController::class, 'create'])->name('superadmin.create');
-Route::post('/superadmin/store', [SuperadminController::class, 'store'])->name('superadmin.store');
+
 
 
 //Rutas de Tareas
-Route::post('/superadmin/tasks', [SuperadminController::class, 'store'])->name('superadmin.store');
+Route::get('/superadmin/create', [SuperadminController::class, 'create'])->name('superadmin.create');
+Route::post('/superadmin/store', [SuperadminController::class, 'store'])->name('superadmin.store');
 Route::delete('/superadmin/tasks/{id}', [SuperadminController::class, 'destroy'])->name('superadmin.delete');
 Route::get('/superadmin/tasks/{id}/edit', [SuperadminController::class, 'edit'])->name('superadmin.edit');
-
+Route::put('/superadmin/tasks/{id}', [SuperadminController::class, 'update'])->name('superadmin.update');
 
 //User
 Route::get('/user/dashboard', [UserController::class, 'dashboard'])->name('user.dashboard');
