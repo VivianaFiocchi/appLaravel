@@ -1,0 +1,15 @@
+.task-card {
+    margin-bottom: 20px; /* Espacio entre cada tarjeta */
+}
+
+.user-task {
+    display: flex;
+    flex-direction: row;
+}
+
+.other-task {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap; /* Envolver las tarjetas en una línea nueva */
+    justify-content: flex-start; /* Alinear las tarjetas a la izquierda */
+}
