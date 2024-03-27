@@ -13,6 +13,9 @@ class Task extends Model
         'title',
         'description',
         'assigned_user_id',
+        'attachment_path', // Agrega el campo attachment_path al array fillable
+        'status',
+        
     ];
 
     // Relación con el usuario asignado
@@ -20,5 +23,13 @@ class Task extends Model
     {
         return $this->belongsTo(User::class, 'assigned_user_id');
     }
+
+    // Relación con los comentarios de la tarea
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+    
     public $timestamps = false;
+    
 }

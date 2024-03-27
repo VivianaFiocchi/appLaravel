@@ -28,16 +28,71 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach($tasks as $task)
-            <div class="bg-white rounded-lg shadow-lg p-6">
-                <div class="font-bold text-xl mb-2 text-gray-800">{{ $task->title }}</div>
-                <p class="text-gray-700 mb-4">Usuario Asignado: {{ $task->assignedUser->name }}</p>
-                <div class="flex justify-center">
-                    <a href="{{ route('superadmin.edit', ['id' => $task->id]) }}" class="mr-4 inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded btn">Modificar</a>
-                    <form action="{{ route('superadmin.delete', $task->id) }}" method="POST" class="inline-block">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <div class="p-6">
+                    <div class="font-bold text-xl mb-2 text-gray-800">{{ $task->title }}</div>
+                    <p class="text-gray-700 mb-4">Usuario Asignado: {{ $task->assignedUser->name }}</p>
+                    <div class="text-gray-700 mb-4">Descripción: {{ $task->description }}</div>
+                    <!-- Mostrar estado de la tarea -->
+    <div class="text-gray-700 mb-4">Estado: {{ $task->status }}</div>
+    <select name="status">
+    <option value="Por realizar">Por realizar</option>
+    <option value="En curso">En curso</option>
+    <option value="Realizada">Realizada</option>
+</select>
+                    <!-- Mostrar archivo adjunto si existe -->
+                    @if($task->attachment_path)
+                    <div class="flex items-center mb-2">
+                        <input type="checkbox" name="delete_attachments[]" value="{{ $task->id }}" class="mr-2">
+                        <p class="text-gray-700">Archivo Adjunto: <a href="{{ Storage::url($task->attachment_path) }}" target="_blank">{{ basename($task->attachment_path) }}</a></p>
+                    </div>
+                    @endif
+                </div>
+                <div class="p-6 border-t border-gray-200">
+                    <!-- Formulario para cargar archivos -->
+                    <form action="{{ route('superadmin.uploadAttachment', ['taskId' => $task->id]) }}" method="POST" enctype="multipart/form-data" class="mb-4">
+                        @csrf
+                        <label for="attachment" class="block">Adjuntar Archivo:</label>
+                        <input type="file" name="attachment" id="attachment" required>
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2">Adjuntar Archivo</button>
+                    </form>
+                    <!-- Formulario para eliminar archivo adjunto -->
+                    @if($task->attachment_path && (auth()->user()->id == $task->assigned_user_id || auth()->user()->id == $task->user_id || auth()->user()->is_superadmin))
+                    <form action="{{ route('superadmin.deleteAttachment', ['taskId' => $task->id]) }}" method="POST">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded btn" onclick="return confirm('¿Estás seguro de que deseas eliminar esta tarea?')">Eliminar</button>
+                        <input type="hidden" name="task_id" value="{{ $task->id }}">
+                        <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4">Eliminar Archivo Adjunto</button>
                     </form>
+                    @endif
+                    <!-- Formulario para agregar comentarios -->
+                    <form action="{{ route('superadmin.addComment', ['taskId' => $task->id]) }}" method="POST" class="mb-4">
+                        @csrf
+                        <label for="comment" class="block">Agregar Comentario:</label>
+                        <textarea name="content" id="comment" rows="3" class="w-full border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500" required></textarea>
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2">Agregar Comentario</button>
+                    </form>
+                    <!-- Comentarios -->
+                    <div class="comments">
+                        <h3 class="text-lg font-semibold mb-2">Comentarios</h3>
+                        @if($task->comments->count() > 0)
+                        <ul>
+                            @foreach($task->comments as $comment)
+                            <li>{{ $comment->content }}</li>
+                            @endforeach
+                        </ul>
+                        @else
+                        <p>No hay comentarios aún.</p>
+                        @endif
+                    </div>
+                    <div class="flex justify-center">
+                        <a href="{{ route('superadmin.edit', ['id' => $task->id]) }}" class="mr-4 inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded btn">Modificar</a>
+                        <form action="{{ route('superadmin.delete', $task->id) }}" method="POST" class="inline-block">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded btn" onclick="return confirm('¿Estás seguro de que deseas eliminar esta tarea?')">Eliminar</button>
+                        </form>
+                    </div>
                 </div>
             </div>
             @endforeach
